@@ -1,7 +1,17 @@
+const COLOR_MAIN = 0xF0B70C;
+const COLOR_LIGHT = 0x7b5e57;
+const COLOR_DARK = 0xF68301;
 class Story extends Phaser.Scene {
     constructor() {
         super('Story');
     }
+	preload(){
+		this.load.scenePlugin({
+            key: 'rexuiplugin',
+            url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+            sceneKey: 'rexUI'
+        });  
+	}
     create() {
 		this.add.sprite(0, 0, 'background').setOrigin(0,0);
 
@@ -17,19 +27,27 @@ class Story extends Phaser.Scene {
 
 		this.cameras.main.fadeIn(250, 0, 0, 0);
 
-		let backgroundScroll = this.add.graphics();
-        backgroundScroll.fillStyle(0x0000ff, 1); // Blue color with full opacity
-        backgroundScroll.fillRect(0, 0, 450, 730);
-		this.scrollContainer = this.add.container(100, 100);
-		this.scrollContainer.add(backgroundScroll);
-		this.listItems = [];
-        for (let i = 0; i < 20; i++) {
-            let item = this.add.text(10, i * 30 + 10, 'Item jkdfjkdfjkdfk ' + (i + 1), fontStory);
-            this.scrollContainer.add(item);
-            this.listItems.push(item);
-        }
+		var panel = this.rexUI.add.scrollablePanel({
+            x: EPT.world.centerX, y: EPT.world.centerY,
+            width: 500, height: 700,
 
+            scrollMode: 'y',
 
+            panel: {
+                child: CreatePanel(this),
+            },
+            space: {
+                slider: 15,
+            }
+        }).layout()
+        panel.setChildrenInteractive({
+            targets: [
+                panel.getElement('panel')
+            ]
+        }).on('child.click', function (child) {
+                // child : Label from CreateItem()  
+                console.log(`Click ${child.name}`);
+            })
 
 	}
 	clickContinue() {
@@ -37,3 +55,61 @@ class Story extends Phaser.Scene {
 	}
 
 };
+var CreatePanel = function (scene) {
+    var panel = scene.rexUI.add.sizer({
+        orientation: 'y',
+        space: { item: 5 }
+    })
+
+    for (var i = 0; i < 10; i++) {
+        panel
+            .add(
+                CreateItem(scene, i.toString()),
+                { expand: true }
+            )
+    }
+
+    return panel;
+}
+
+var CreateItem = function (scene, text) {
+    var item = scene.rexUI.add.dialog({
+        height: 80,
+
+        space: { left: 10, right: 10, top: 10, bottom: 10 },
+
+        background: scene.rexUI.add.roundRectangle({
+            radius: 10,
+            color: COLOR_MAIN
+        }),
+
+        title: scene.rexUI.add.label({
+            text: scene.add.text(0, 0, text),
+        }),
+
+        content: scene.rexUI.add.label({
+            text: scene.add.text(0, 0, "ITEM " + text),
+        }),
+
+        actions: [
+            scene.rexUI.add.label({
+                space: { left: 5, right: 5, top: 5, bottom: 5 },
+                background: scene.rexUI.add.roundRectangle({
+                    color: COLOR_DARK
+                }),
+                text: scene.add.text(0, 0, 'OK'),
+            }),
+        ],
+
+        proportion: {
+            content: 1,
+        },
+
+        align: {
+            actions: 'right'
+        },
+
+        name: text
+    })
+    return item;
+}
