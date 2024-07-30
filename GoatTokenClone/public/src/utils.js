@@ -264,6 +264,8 @@ EPT.Lang = {
       'screen-story-howto': 'Story / how to play\nscreen',
       'game_tile':'GOAT COIN',
       'rate': 'Rate: ',
+      'user_name': 'User Name',
+      'list_quest': "Task list :"
     },
     'pl': {
       'FONT': 'Arial',

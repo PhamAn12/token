@@ -7,15 +7,16 @@ class Game extends Phaser.Scene {
         this.stateStatus = null;
         this._score = 0;
         this._time = 10;
+		this._timerDuration = this._time;
 		this._rate = 1.2;
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY + 250, 'clickme', this.addPoints, this, 'static');
+		this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY + 350, 'clickme', this.addPoints, this, 'static');
         this.buttonDummy.setOrigin(0.5,0.5);
         this.buttonDummy.setAlpha(0);
         this.buttonDummy.setScale(0.1);
-        this.tweens.add({targets: this.buttonDummy, alpha: this._time > 0 ? 0.5: 1, duration: 500, ease: 'Linear'});
+        this.tweens.add({targets: this.buttonDummy, alpha: this._time > 0 ? 0.3: 1, duration: 300, ease: 'Linear'});
         this.tweens.add({targets: this.buttonDummy, scale: 1, duration: 500, ease: 'Back'});
         
         this.initUI();
@@ -25,7 +26,7 @@ class Game extends Phaser.Scene {
 				if(this._time > 0){
 					this._time--;
 					if(this.buttonDummy.anpha = 1) {
-						this.tweens.add({targets: this.buttonDummy, alpha: 0.5, duration: 500, ease: 'Linear'});
+						this.tweens.add({targets: this.buttonDummy, alpha: 0.3, duration: 300, ease: 'Linear'});
 					}
 					//this.buttonDummy.setAlpha(0.5);
 				}
@@ -149,18 +150,23 @@ class Game extends Phaser.Scene {
 		// this.buttonPause.setOrigin(0,0);
 
 		var fontScore = { font: '38px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 5 };
-		var fontScoreWhite =  { font: '38px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 5 };
-		this.textScore = this.add.text(EPT.world.centerX, 45, EPT.text['gameplay-score']+this._score, fontScore);
-		this.textScore.setOrigin(0.5,0.5);
+		var fontScoreWhite =  { font: '28px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 5 };
+		this.textScore = this.add.text(30, EPT.world.height-45, EPT.text['gameplay-score']+this._score, fontScore);
+		this.textScore.setOrigin(0,1);
 
 		this.textScore.y = -this.textScore.height-20;
-		this.tweens.add({targets: this.textScore, y: 145, duration: 500, delay: 100, ease: 'Back'});
+		this.tweens.add({targets: this.textScore, y: 90, duration: 500, delay: 100, ease: 'Back'});
 
-		this.textTime = this.add.text(30, EPT.world.height-45, EPT.text['gameplay-timeleft']+this._time, fontScore);
-		this.textTime.setOrigin(0,1);
+		this.textUsername = this.add.text(EPT.world.centerX, EPT.world.height-45, EPT.text['user_name'], fontScore);
+		this.textUsername.setOrigin(0.5,0.5);
+
+		this.tweens.add({targets: this.textUsername, y: 150, duration: 500, delay: 100, ease: 'Back'});
+
+		this.textTime = this.add.text(EPT.world.width-60, 100, EPT.text['gameplay-timeleft']+this._time, fontScoreWhite);
+		this.textTime.setOrigin(1,0);
 
 		this.textTime.y = -this.textTime.height-20;
-		this.tweens.add({targets: this.textTime, y: 90, duration: 500, delay: 100, ease: 'Back'});
+		this.tweens.add({targets: this.textTime, y: EPT.world.centerY + 250, duration: 500, delay: 100, ease: 'Back'});
 
 		this.rateText = this.add.text(EPT.world.width-70, 45, EPT.text['rate']+this._rate, fontScore);
 		this.rateText.setOrigin(1,0);
@@ -172,15 +178,16 @@ class Game extends Phaser.Scene {
 		avatar.setScale(0.5);
 		this.tweens.add({targets: this.avatar, y: 90, duration: 500, delay: 100, ease: 'Back'});
 
-		var avatar = this.add.sprite(EPT.world.centerX, EPT.world.centerY, 'goat');
+		var middleImage = this.add.sprite(EPT.world.centerX, EPT.world.centerY-20, 'goat');
+		this.tweens.add({targets: middleImage, angle: middleImage.angle-12, duration: 600, ease: 'Sine.inOut' });
+        this.tweens.add({targets: middleImage, angle: middleImage.angle+14, duration: 1200, ease: 'Sine.inOut', yoyo: true, repeat: -1, delay: 1000 });
 
-		// var buttonMenu = this.add.sprite(EPT.world.centerX, EPT.world.centerY + 420 , 'button-beer');
-		// buttonMenu.setOrigin(0.5,0.5);
-		// this.textTime.y = EPT.world.height+this.textTime.height+30;
-		// this.tweens.add({targets: this.textTime, y: EPT.world.height-30, duration: 500, ease: 'Back'});		
+		var buttonQuest = new Button(EPT.world.width-20, EPT.world.height-20, 'button-continue', this.openQuest, this);
+		buttonQuest.setOrigin(1,1);
+		buttonQuest.setScale(0.5);
 
-		// this.buttonPause.y = -this.buttonPause.height-20;
-        // this.tweens.add({targets: this.buttonPause, y: 20, duration: 500, ease: 'Back'});
+		buttonQuest.x = EPT.world.width+buttonQuest.width+20;
+		this.tweens.add({targets: buttonQuest, x: EPT.world.width-20, duration: 500, ease: 'Back'});
 
 		var fontTitle = { font: '48px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 10 };
 
@@ -218,6 +225,53 @@ class Game extends Phaser.Scene {
 		this.screenGameoverGroup.add(this.screenGameoverRestart);
 		this.screenGameoverGroup.add(this.screenGameoverScore);
 		this.screenGameoverGroup.toggleVisible();
+		// Add the loading background sprite
+        this.loadingBg = this.add.sprite(this.scale.width / 2, this.scale.height / 2 + 210, 'loading-background');
+        this.loadingBg.setOrigin(0.5, 0.5);
+
+        // Create a separate canvas for the gradient
+        var gradientCanvas = document.createElement('canvas');
+        gradientCanvas.width = 540;
+        gradientCanvas.height = 25;
+        var gradientContext = gradientCanvas.getContext('2d');
+
+        // Create the gradient
+        var gradient = gradientContext.createLinearGradient(0, 0, gradientCanvas.width, 0);
+        gradient.addColorStop(0, '#ffff00');  // Start color
+        gradient.addColorStop(1, '#ff0000');  // End color
+
+        // Fill the canvas with the gradient
+        gradientContext.fillStyle = gradient;
+        gradientContext.fillRect(0, 0, gradientCanvas.width, gradientCanvas.height);
+
+        // Create a texture from the canvas and use it for a sprite
+        
+		if (this.textures.exists('gradient')) {
+			var gradientTexture = this.textures.get('gradient');
+		} else {
+			var gradientTexture = this.textures.createCanvas('gradient', gradientCanvas.width, gradientCanvas.height);
+		}
+		if(gradientTexture != null && gradientTexture.context != null)
+        {
+			gradientTexture.context.drawImage(gradientCanvas, 0, 0);
+        	gradientTexture.refresh();
+		}
+
+        this.progressBar = this.add.sprite(
+            this.loadingBg.x - (this.loadingBg.width * 0.5) + 20,
+            this.loadingBg.y - (this.loadingBg.height * 0.5) + 23,
+            'gradient'
+        ).setOrigin(0, 0.5);
+
+        // Store the progress data object and tween reference
+        this.progressData = { value: 0 };
+        this.progressTween = null;
+
+        // Bind the restartProgressBar method to the scene context
+        this.restartProgressBar = this.restartProgressBar.bind(this);
+
+        // Initial progress bar setup
+        this.restartProgressBar();
     }
     addPoints() {
 		if(this._time <= 0) {
@@ -231,7 +285,14 @@ class Game extends Phaser.Scene {
         	this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
 
         	this.cameras.main.shake(100, 0.01, true);
-			this._time = 10
+			this._time = 10;
+			this.restartProgressBar();
+		} else {
+			var randX = Phaser.Math.Between(200, EPT.world.width-200);
+        	var randY = Phaser.Math.Between(200, EPT.world.height-200);
+			var pointsAdded = this.add.text(randX, randY, 'wait for time end!', { font: '28px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 10 });
+			pointsAdded.setOrigin(0.5, 0.5);
+        	this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
 		}
     }
 	stateRestart() {
@@ -242,6 +303,27 @@ class Game extends Phaser.Scene {
 		EPT.Sfx.play('click');
 		EPT.fadeOutScene('MainMenu', this);
 	}
+	restartProgressBar() {
+        // Reset the progress value
+        this.progressData = { value: 0 };
+
+        // Stop the existing tween if it exists
+        if (this.progressTween) {
+            this.progressTween.stop();
+        }
+
+        // Create a new tween to update the progress value over 10 seconds
+        this.progressTween = this.tweens.add({
+            targets: this.progressData,
+            value: 1,
+            duration: this._timerDuration * 1000, // 10 seconds
+            ease: 'Linear',
+            onUpdate: () => {
+                // Update the width of the progress bar sprite
+                this.progressBar.setCrop(0, 0, this.progressBar.width * this.progressData.value, this.progressBar.height);
+            }
+        });
+    }
 	gameoverScoreTween() {
 		var self = this;
 		this.screenGameoverScore.setText(EPT.text['gameplay-score']+'0');
@@ -267,5 +349,8 @@ class Game extends Phaser.Scene {
 				}
 			});
 		}
+	}
+	openQuest() {
+		EPT.fadeOutScene('Story', this);
 	}
 };
