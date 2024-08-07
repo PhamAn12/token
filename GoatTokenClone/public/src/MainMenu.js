@@ -137,7 +137,7 @@ class MainMenu extends Phaser.Scene {
                 ['button-beer', 'img/button-beer.png'],
                 ['banner-beer', 'img/banner-beer.png'],
                 ['particle', 'img/particle.png'],
-                ['avatar','img/avatar.png']
+                ['avatar','img/avatar.png'],
             ],
             'spritesheet': [
                 ['button-continue', 'img/button-continue.png', {frameWidth:180,frameHeight:180}],

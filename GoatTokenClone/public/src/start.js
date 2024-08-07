@@ -29,7 +29,7 @@ var gameConfig = {
 		width: 640,
 		height: 960
 	},
-	scene: [Boot, Preloader, MainMenu, Settings, Story, Game]
+	scene: [Boot, Preloader, MainMenu, Settings, Story, Game, Shop]
 }
 game = new Phaser.Game(gameConfig);
 window.focus();

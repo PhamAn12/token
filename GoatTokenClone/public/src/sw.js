@@ -32,6 +32,7 @@ var appShellFiles = [
   './js/Settings.js',
   './js/Story.js',
   './js/Game.js',
+  './js/Shop.js',
   './img/background.png',
   './img/banner-beer.png',
   './img/button-achievements.png',
@@ -59,7 +60,10 @@ var appShellFiles = [
   './img/pattern.png',
   './img/title.png',
   './img/fake_avatar.png',
-  './img/goat.png'
+  './img/goat.png',
+  './img/home-icon.png',
+  './img/shop-icon.png',
+  './img/quest-icon.png',
 ];
 
 self.addEventListener('install', function(e) {

@@ -12,7 +12,7 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY + 350, 'clickme', this.addPoints, this, 'static');
+		this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY + 300, 'clickme', this.addPoints, this, 'static');
         this.buttonDummy.setOrigin(0.5,0.5);
         this.buttonDummy.setAlpha(0);
         this.buttonDummy.setScale(0.1);
@@ -166,7 +166,7 @@ class Game extends Phaser.Scene {
 		this.textTime.setOrigin(1,0);
 
 		this.textTime.y = -this.textTime.height-20;
-		this.tweens.add({targets: this.textTime, y: EPT.world.centerY + 250, duration: 500, delay: 100, ease: 'Back'});
+		this.tweens.add({targets: this.textTime, y: EPT.world.centerY + 150, duration: 500, delay: 100, ease: 'Back'});
 
 		this.rateText = this.add.text(EPT.world.width-70, 45, EPT.text['rate']+this._rate, fontScore);
 		this.rateText.setOrigin(1,0);
@@ -178,16 +178,16 @@ class Game extends Phaser.Scene {
 		avatar.setScale(0.5);
 		this.tweens.add({targets: this.avatar, y: 90, duration: 500, delay: 100, ease: 'Back'});
 
-		var middleImage = this.add.sprite(EPT.world.centerX, EPT.world.centerY-20, 'goat');
+		var middleImage = this.add.sprite(EPT.world.centerX, EPT.world.centerY-50, 'goat');
 		this.tweens.add({targets: middleImage, angle: middleImage.angle-12, duration: 600, ease: 'Sine.inOut' });
         this.tweens.add({targets: middleImage, angle: middleImage.angle+14, duration: 1200, ease: 'Sine.inOut', yoyo: true, repeat: -1, delay: 1000 });
 
-		var buttonQuest = new Button(EPT.world.width-20, EPT.world.height-20, 'button-continue', this.openQuest, this);
-		buttonQuest.setOrigin(1,1);
-		buttonQuest.setScale(0.5);
+		// var buttonQuest = new Button(EPT.world.width-20, EPT.world.height-20, 'button-continue', this.openQuest, this);
+		// buttonQuest.setOrigin(1,1);
+		// buttonQuest.setScale(0.5);
 
-		buttonQuest.x = EPT.world.width+buttonQuest.width+20;
-		this.tweens.add({targets: buttonQuest, x: EPT.world.width-20, duration: 500, ease: 'Back'});
+		// buttonQuest.x = EPT.world.width+buttonQuest.width+20;
+		// this.tweens.add({targets: buttonQuest, x: EPT.world.width-20, duration: 500, ease: 'Back'});
 
 		var fontTitle = { font: '48px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 10 };
 
@@ -272,6 +272,17 @@ class Game extends Phaser.Scene {
 
         // Initial progress bar setup
         this.restartProgressBar();
+		//this.createMenuButtons();
+		const graphics = this.add.graphics();
+		graphics.fillStyle(0xfae019, 1); 
+		
+		const rectangleHeight = 70; 
+		graphics.fillRect(0, EPT.world.height - rectangleHeight, EPT.world.width, rectangleHeight);
+
+		var buttonShop = new Button(EPT.world.width/2 - 200, EPT.world.height-35, 'shop-icon', this.openShop, this);
+		var buttonHome = new Button(EPT.world.width/2, EPT.world.height-35, 'home-icon', this.stateBack, this);
+		var buttonQuest = new Button(EPT.world.width/2 + 200, EPT.world.height-35, 'quest-icon', this.openQuest, this);
+		buttonShop.setAlpha(0.7);
     }
     addPoints() {
 		if(this._time <= 0) {
@@ -353,4 +364,37 @@ class Game extends Phaser.Scene {
 	openQuest() {
 		EPT.fadeOutScene('Story', this);
 	}
+	openShop() {
+		EPT.fadeOutScene('Shop', this);
+	}
+	createButton(x, y, label) {
+        const button = this.add.container(x, y);
+		var fontScoreWhite =  { font: '28px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 5 };
+        const graphics = this.add.graphics();
+        graphics.fillStyle(0xffff00, 1);
+        graphics.fillRoundedRect(-50, -20, 100, 40, 10);
+        graphics.lineStyle(2, 0x000000, 1);
+        graphics.strokeRoundedRect(-50, -20, 100, 40, 10);
+        button.add(graphics);
+
+        const text = this.add.text(0, 0, label, fontScoreWhite).setOrigin(0.5);
+        button.add(text);
+
+        button.setSize(100, 40);
+        button.setInteractive(new Phaser.Geom.Rectangle(-50, -20, 100, 40), Phaser.Geom.Rectangle.Contains);
+
+        return button;
+    }
+	createMenuButtons() {
+        const homeButton = this.createButton(EPT.world.width/2, EPT.world.height-50, 'Home');
+        const questButton = this.createButton(EPT.world.width/2+100, EPT.world.height-50, 'Quest');
+		questButton.on('pointerdown', () => {
+            this.openQuest();
+        });
+		const storeButton = this.createButton(EPT.world.width/2-100, EPT.world.height-50, 'Store');
+
+        this.add.existing(homeButton);
+        this.add.existing(questButton);
+		this.add.existing(storeButton);
+    }
 };

@@ -19,11 +19,6 @@ class Story extends Phaser.Scene {
 		var textStory = this.add.text(EPT.world.centerX - 200, 50, EPT.text['list_quest'], fontStory);
 		textStory.setOrigin(0.5,0);
 
-		var buttonContinue = new Button(EPT.world.width-20, EPT.world.height-20, 'button-back', this.clickContinue, this);
-		buttonContinue.setOrigin(1,1);
-		buttonContinue.setScale(1.2);
-		buttonContinue.x = EPT.world.width+buttonContinue.width+20;
-		this.tweens.add({targets: buttonContinue, x: EPT.world.width-20, duration: 500, ease: 'Back'});
 
 		this.cameras.main.fadeIn(250, 0, 0, 0);
 
@@ -49,9 +44,23 @@ class Story extends Phaser.Scene {
                 console.log(`Click ${child.name}`);
             })
 
+        const graphics = this.add.graphics();
+        graphics.fillStyle(0xfae019, 1); 
+            
+        const rectangleHeight = 70; 
+        graphics.fillRect(0, EPT.world.height - rectangleHeight, EPT.world.width, rectangleHeight);
+    
+        var buttonShop = new Button(EPT.world.width/2 - 200, EPT.world.height-35, 'shop-icon', this.gotoShop, this);
+        var buttonHome = new Button(EPT.world.width/2, EPT.world.height-35, 'home-icon', this.gotoHome, this);
+        var buttonQuest = new Button(EPT.world.width/2 + 200, EPT.world.height-35, 'quest-icon',this.stateBack, this);
+        buttonShop.setAlpha(0.7);
+
 	}
-	clickContinue() {
+	gotoHome() {
 		EPT.fadeOutScene('Game', this);
+	}
+    gotoShop() {
+		EPT.fadeOutScene('Shop', this);
 	}
 
 };
