@@ -29,6 +29,7 @@ class Preloader extends Phaser.Scene {
 				['home-icon', 'img/home-icon.png'],
 				['shop-icon', 'img/shop-icon.png'],
 				['quest-icon', 'img/quest-icon.png'],
+				['upgrade-icon', 'img/upgrade-icon.png'],
 			],
 			'spritesheet': [
 				['button-start', 'img/button-start.png', {frameWidth:180,frameHeight:180}],

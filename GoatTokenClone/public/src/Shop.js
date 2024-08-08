@@ -21,6 +21,29 @@ class Shop extends Phaser.Scene {
         var buttonHome = new Button(EPT.world.width/2, EPT.world.height-35, 'home-icon', this.gotoHome, this);
         var buttonQuest = new Button(EPT.world.width/2 + 200, EPT.world.height-35, 'quest-icon',this.gotoQuest, this);
         buttonShop.setAlpha(0.7);
+        function addZoomEffect(button) {
+			button.on('pointerover', () => {
+				this.tweens.add({
+					targets: button,
+					scaleX: 1.2,
+					scaleY: 1.2,
+					duration: 200,
+					ease: 'Power2'
+				});
+			});
+	
+			button.on('pointerout', () => {
+				this.tweens.add({
+					targets: button,
+					scaleX: 1,
+					scaleY: 1,
+					duration: 200,
+					ease: 'Power2'
+				});
+			});
+		}
+		addZoomEffect.call(this, buttonQuest);
+    	addZoomEffect.call(this, buttonHome);
 	}
 	gotoHome() {
 		EPT.fadeOutScene('Game', this);

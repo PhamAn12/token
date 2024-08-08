@@ -11,6 +11,7 @@ class Game extends Phaser.Scene {
 		this._rate = 1.2;
 		this._gamePaused = false;
 		this._runOnce = false;
+		this._level = 1;
 
 		this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY + 300, 'clickme', this.addPoints, this, 'static');
         this.buttonDummy.setOrigin(0.5,0.5);
@@ -168,6 +169,12 @@ class Game extends Phaser.Scene {
 		this.textTime.y = -this.textTime.height-20;
 		this.tweens.add({targets: this.textTime, y: EPT.world.centerY + 150, duration: 500, delay: 100, ease: 'Back'});
 
+		this.texLevel = this.add.text(EPT.world.centerX - 230, 0, 'Level: '+this._level, fontScoreWhite);
+		this.texLevel.setOrigin(0,1);
+
+		this.texLevel.y = -this.textTime.height-20;
+		this.tweens.add({targets: this.texLevel, y: EPT.world.centerY + 185, duration: 500, delay: 100, ease: 'Back'});
+
 		this.rateText = this.add.text(EPT.world.width-70, 45, EPT.text['rate']+this._rate, fontScore);
 		this.rateText.setOrigin(1,0);
 
@@ -282,7 +289,33 @@ class Game extends Phaser.Scene {
 		var buttonShop = new Button(EPT.world.width/2 - 200, EPT.world.height-35, 'shop-icon', this.openShop, this);
 		var buttonHome = new Button(EPT.world.width/2, EPT.world.height-35, 'home-icon', this.stateBack, this);
 		var buttonQuest = new Button(EPT.world.width/2 + 200, EPT.world.height-35, 'quest-icon', this.openQuest, this);
+		var buttonUpgradeLevel = new Button(EPT.world.width/2 - 260, EPT.world.centerY+155, 'upgrade-icon', this.stateBack, this);
 		buttonShop.setAlpha(0.7);
+
+		function addZoomEffect(button) {
+			button.on('pointerover', () => {
+				this.tweens.add({
+					targets: button,
+					scaleX: 1.2,
+					scaleY: 1.2,
+					duration: 200,
+					ease: 'Power2'
+				});
+			});
+	
+			button.on('pointerout', () => {
+				this.tweens.add({
+					targets: button,
+					scaleX: 1,
+					scaleY: 1,
+					duration: 200,
+					ease: 'Power2'
+				});
+			});
+		}
+		addZoomEffect.call(this, buttonShop);
+    	addZoomEffect.call(this, buttonQuest);
+		addZoomEffect.call(this, buttonUpgradeLevel);
     }
     addPoints() {
 		if(this._time <= 0) {
@@ -397,4 +430,5 @@ class Game extends Phaser.Scene {
         this.add.existing(questButton);
 		this.add.existing(storeButton);
     }
+	
 };
